@@ -1,0 +1,48 @@
+@startuml
+abstract class BaseMsg
+class OrderMsg extends BaseMsg
+class DataMsg extends BaseMsg
+class ReqOrderMsg extends OrderMsg
+class AckOrderMsg extends OrderMsg
+
+abstract class BaseMsgCreater{
+    BaseMsg createMsg();
+}
+
+class OrderMsgCreater extends BaseMsgCreater
+class DataMsgCreater  extends BaseMsgCreater
+
+
+
+interface IBaseHandler{
+    Object handle(Object obj)
+}
+interface IBaseMsgParser extends IHandler{
+    BaseMsg parse(BaseMsg baseMsg)
+}
+class JsonParser implements IBaseMsgParser
+class XmlParser implements IBaseMsgParser
+class ProtoBufParser implements IBaseMsgParser
+
+interface IBaseMsgSender extends IHandler{
+    Object send(BaseMsg baseMsg)
+}
+class RocketMQMsgSender implements IBaseMsgSender
+class KafkaMsgSender implements IBaseMsgSender
+
+interface IBaseMsgReceiver extends IHandler{
+    void receiver(Object msg)
+}
+class RocketMQMsgReceiver implements IBaseMsgReceiver
+class KafkaMsgReceiver implements IBaseMsgReceiver
+
+interface IServiceHandler extends IBaseHandler{
+
+}
+interface IOrderServiceHandler extends IServiceHandler
+class ReqOrderServiceHandler implements IOrderServiceHandler
+class AckOrderServiceHandler implements IOrderServiceHandler
+
+interface IDataServiceHandler extends IServiceHandler
+class QueryDataServiceHandler implements IDataServiceHandler
+@enduml
